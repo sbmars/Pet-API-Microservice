@@ -15,7 +15,7 @@ A simple Express-based microservice to manage pets. This API allows you to add, 
 
    ```bash
    git clone git@github.com:sbmars/Pet-API-Microservice.git
-   cd pet-api
+   cd Pet-API-Microservice
    ```
    
 2. Install dependencies:
