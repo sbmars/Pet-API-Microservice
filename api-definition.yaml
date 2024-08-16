@@ -1,0 +1,171 @@
+openapi: 3.0.3
+info:
+  title: Pet API Microservice
+  description: An API Microservice to manage pets.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local server
+
+paths:
+  /pet:
+    get:
+      summary: Get all pets
+      operationId: getPets
+      responses:
+        '200':
+          description: A list of pets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+
+    post:
+      summary: Add a new pet
+      operationId: addPet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPet'
+      responses:
+        '201':
+          description: Pet created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Parameter Exception - Parameter name is not set.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Update a pet by ID (in request body)
+      operationId: updatePetByIdInBody
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '200':
+          description: Pet updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: API Exception - Pet not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /pet/{id}:
+    put:
+      summary: Update a pet by ID (in path parameter)
+      operationId: updatePetByIdInPath
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPet'
+      responses:
+        '200':
+          description: Pet updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: API Exception - Pet not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete a pet by ID
+      operationId: deletePetById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Pet deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '404':
+          description: API Exception - Pet not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+        age:
+          type: integer
+
+    NewPet:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Buddy"
+        type:
+          type: string
+          example: "Dog"
+        age:
+          type: integer
+          example: 4
+      required:
+        - name
+
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "API Exception"
+        errorMessage:
+          type: string
+          example: "Pet not found"
+
+    Success:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "success"
+        errorMessage:
+          type: string
+          example: "Pet with id 1 deleted"
